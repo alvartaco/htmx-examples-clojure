@@ -9,22 +9,24 @@
 
 (def ^:private system (atom nil))
 
-(defn start-system []
-  (when @system
-    (stop-system!))
-  (reset! system (ig/init config)))
-
 (defn stop-system! []
   (when @system
     (ig/halt! @system)
     (reset! system nil)))
+
+(defn start-system! []
+  (when @system
+    (stop-system!))
+  (let [s (reset! system (ig/init config))
+        _ (tap> s)]
+    s))
 
 (defn get-system []
   @system)
 
 (comment
 
-  (start-system)
+  (start-system!)
   (stop-system!)
   (get-system)
 
