@@ -1,4 +1,3 @@
-{
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
- :paths ["src"]
- }
+{:deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        integrant/integrant {:mvn/version "0.8.1"}}
+ :paths ["src"]}
