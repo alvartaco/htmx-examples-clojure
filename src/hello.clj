@@ -8,4 +8,5 @@
 
 (comment
   (run {})
+  (tap> [:hi])
   ,,)
