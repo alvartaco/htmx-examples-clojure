@@ -6,17 +6,17 @@
 ;;------------------------------------------;;
 (def config
   {::start-time nil
-   :server/port 3000
-   :server/join? false
-   ::server {:port (ig/ref :server/port)
-             :join? (ig/ref :server/join?)}})
+   ::dev-mode? true
+   :server/opts {:port 3000 :join? false}
+   ::server {:server-opts (ig/ref :server/opts)
+             :dev-mode? (ig/ref ::dev-mode?)}})
 
 (defmethod ig/init-key ::start-time [_ _]
   (java.util.Date.))
-(defmethod ig/init-key ::server [_ {:keys [port join?]}]
-  (server/start-server {:port port :join? join?}))
-(defmethod ig/init-key :server/port [_ v] v)
-(defmethod ig/init-key :server/join? [_ v] v)
+(defmethod ig/init-key ::dev-mode? [_ v] v)
+(defmethod ig/init-key :server/opts [_ v] v)
+(defmethod ig/init-key ::server [_ {:keys [server-opts dev-mode?]}]
+  (server/start-server dev-mode? server-opts))
 
 (defmethod ig/halt-key! ::server [_ server]
   (server/stop-server server))
@@ -27,14 +27,14 @@
 
 (defn stop-system! []
   (when @system
-    (tap> [:stop-system! "system stop"])
+    (tap> [`stop-system! "system stop"])
     (ig/halt! @system)
     (reset! system nil)))
 
 (defn start-system! []
   (stop-system!)
   (let [s (reset! system (ig/init config))
-        _ (tap> [:start-system! "system startup"])
+        _ (tap> [`start-system! "system startup"])
         _ (tap> s)]
     s))
 ;;------------------------------------------;;
@@ -43,5 +43,9 @@
 
   (start-system!)
   (stop-system!)
+
+  (require '[criterium.core :as cc])
+  ;; roughly 3ms startup time in my machine for jetty server.
+  (cc/quick-bench (start-system!))
 
   ,,)
