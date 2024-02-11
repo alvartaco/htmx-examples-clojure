@@ -4,6 +4,13 @@ This is a learning exercise for myself. I'm going to go through the official htm
 
 htmx niceties for Clojure are present in [SimpleUI](https://github.com/whamtet/simpleui) but I'm going to skip this to keep things simpler.
 
+### How to use
+
+In action here : [TODO - add hosted link]
+
+1. Try out at repl. Else, run `clj -M -m dumrat.htmx-learn.core` at root folder.
+2. Point the browser to [htmx-examples](http://localhost:3000/htmx-examples/index.html).
+
 ### libs used
 
 1. [integrant](https://github.com/weavejester/integrant) for system creation.

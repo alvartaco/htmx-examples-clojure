@@ -1,12 +1,9 @@
 (ns dumrat.htmx-learn.core
-  (:require [dumrat.htmx-learn.system :as system]))
+  (:require [dumrat.htmx-learn.system :as system])
+  (:gen-class))
 
 (defn start! []
-  (system/start-system!))
+  (system/start-system! false))
 
-(comment
-
-  (start!)
-  (system/get-system)
-
-  ,,)
+(defn -main [& args]
+  (start!))

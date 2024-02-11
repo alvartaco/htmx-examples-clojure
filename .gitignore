@@ -18,4 +18,5 @@ pom.xml.asc
 .cpcache/
 .clj-kondo/
 .lsp/
+*.temp
 # End of https://www.toptal.com/developers/gitignore/api/clojure
