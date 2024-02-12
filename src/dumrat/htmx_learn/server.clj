@@ -8,18 +8,18 @@
             [dumrat.htmx-learn.pages.example1 :as example1]))
 
 (def ^:private routes
-  [["/htmx-examples"
-    ["/index.html"
-     {:get {:handler (fn [request]
-                       {:status 200 :headers {} :body "pong"})}}]
+  [["/assets/*" (rr/create-resource-handler)]
+   ["/htmx-examples"
     example1/routes]])
 
 (def handler
   (rr/ring-handler
    (rr/router
-     routes
-     {:data {:middleware [parameters/parameters-middleware
-                          middleware/tap-request-response-reitit-middleware]}})))
+    routes
+    {:data {:middleware [middleware/tap-request-response-reitit-middleware
+                         parameters/parameters-middleware]}
+     :conflicts (constantly nil)})
+   ))
 
 (defn start-server [dev-mode? server-opts]
   (jetty/run-jetty
@@ -33,4 +33,14 @@
 
 (comment
 
-  (require '[ring.mock.request :as req]))
+  (require '[ring.mock.request :as req])
+  (handler {:request-method :get
+            :uri "/index.html"})
+
+  (handler {:request-method :get
+            :uri "/css/site.css"})
+
+  (let [router (rr/router example1/routes)]
+    (reitit.core/match-by-name router ::example1/contact-view-page))
+
+  ,,)

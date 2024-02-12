@@ -1,76 +1,59 @@
 (ns dumrat.htmx-learn.pages.example1
-  (:require [hiccup2.core :as hiccup]
-            [ring.util.response :as response]))
+  (:require [ring.util.response :refer [redirect]]
+            [dumrat.htmx-learn.pages.util :refer [name->path hiccup->html page]]))
 
-(def ^:private state
-  ^{:doc "Store state in app scope atom"}
-  (atom {:firstName "Joe"
-         :lastName "Blow"
-         :email "joe@blow.com"}))
+(defonce ^:private state
+  (atom {::first-name "Joe" ::last-name "Blow" ::email "joe@blow.com"}))
 
-(defn user-card []
+(defn- user-card [request]
   [:div {:hx-target "this" :hx-swap "outerHTML"}
-   [:div [:label "First Name"] (str " : " (:firstName @state))]
-   [:div [:label "Last Name"] (str " : " (:lastName @state))]
-   [:div [:label "Email"] (str " : " (:email @state))]
-   [:button {:hx-get "/htmx-examples/example1/contact/1/edit-form"} "Click to Edit"]])
+   [:div [:label "First Name"] (str " : " (::first-name @state))]
+   [:div [:label "Last Name"] (str " : " (::last-name @state))]
+   [:div [:label "Email"] (str " : " (::email @state))]
+   [:button.btn.btn-primary {:hx-get (name->path request ::contact-edit-form)} "Click to Edit"]])
 
 (defn contact-view-page [request]
   {:status  200
    :headers {}
-   :body
-   (str
-    (hiccup/html
-     [:html
-      [:head
-       [:meta {:charset "utf-8"}]
-       [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
-       [:meta {:name "description" :content "This is an implementation for htmx official example 1 - Click to Edit with a Clojure back-end."}]
-       [:title "</> htmx ~ Examples ~ Click to Edit"]
-       [:link {:rel "stylesheet" :href "/public/css/site.css"}]
-       [:script {:src "https://unpkg.com/htmx.org@1.9.10"}]]
-      [:body
-       (user-card)]]))})
+   :body (hiccup->html (page (user-card request)))})
 
 (defn contact-edit-form [request]
   {:status 200
    :headers {}
-   :body
-   (str (hiccup/html
-         [:form {:hx-put "", :hx-target "this", :hx-swap "outerHTML"}
-          [:div
-           [:label "First Name"]
-           [:input {:type "text", :name "firstName", :value (:firstName @state)}]]
-          [:div {:class "form-group"}
-           [:label "Last Name"]
-           [:input {:type "text", :name "lastName", :value (:lastName @state)}]]
-          [:div {:class "form-group"}
-           [:label "Email Address"]
-           [:input {:type "email", :name "email", :value (:email @state)}]]
-          [:button {:class "btn"} "Submit"]
-          [:button {:class "btn", :hx-get "/htmx-examples/example1/contact/1"} "Cancel"]]))})
+   :body (hiccup->html
+          (page [:form {:hx-put "", :hx-target "this", :hx-swap "outerHTML"}
+                 [:div
+                  [:label "First Name"]
+                  [:input {:autofocus true :type "text", :name "firstName", :value (::first-name @state)}]]
+                 [:div.form-group
+                  [:label "Last Name"]
+                  [:input {:type "text", :name "lastName", :value (::last-name @state)}]]
+                 [:div {:class "form-group"}
+                  [:label "Email Address"]
+                  [:input {:type "email", :name "email", :value (::email @state)}]]
+                 [:button.btn {:type "submit"} "Submit"]
+                 [:button.btn {:hx-get (name->path request ::contact-view-page)} "Cancel"]]))})
+
+(def html-key->state-key
+  {"firstName" ::first-name "lastName" ::last-name "email" ::email})
 
 (defn contact-put [request]
-  (let [[firstName lastName email :as params]
-        (map #(get-in request [:form-params %]) ["firstName" "lastName" "email"])]
+  (let [params (:form-params request)]
     (if (every? some? params)
       (do (swap! state
                  (fn [s]
-                   (-> s
-                       (assoc :firstName firstName)
-                       (assoc :lastName lastName)
-                       (assoc :email email))))
-          (response/redirect
-            "/htmx-examples/example1/contact/1"
-            :see-other)))))
+                   (reduce (partial apply assoc) s
+                           (update-keys params html-key->state-key))))
+          (redirect
+           (name->path request ::contact-view-page)
+           :see-other)))))
 
 (def routes
   ["/example1"
    ["/contact/1"
-    {:get {:name ::contact-view-page
-           :handler contact-view-page}
-     :put {:name ::contact-put
-           :handler contact-put}}]
+    {:name ::contact-view-page
+     :get {:handler contact-view-page}
+     :put {:handler contact-put}}]
    ["/contact/1/edit-form"
-    {:get {:name ::contact-edit-form
-           :handler contact-edit-form}}]])
+    {:name ::contact-edit-form
+     :get {:handler contact-edit-form}}]])
