@@ -3,7 +3,7 @@
             [clojure.datafy :as d]))
 
 (portal/start {:portal.colors/theme :portal.colors/gruvbox
-               :port 45000
+               :port 45001
                :host "localhost"})
 
 (defn error->data [ex]
@@ -16,6 +16,7 @@
      value
      (error->data value))))
 
+(println "Adding tap")
 (add-tap #'submit)
 
 (tap> [:welcome!])
