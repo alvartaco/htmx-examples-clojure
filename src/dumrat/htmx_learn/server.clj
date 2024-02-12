@@ -16,10 +16,10 @@
   (rr/ring-handler
    (rr/router
     routes
-    {:data {:middleware [middleware/tap-request-response-reitit-middleware
-                         parameters/parameters-middleware]}
-     :conflicts (constantly nil)})
-   ))
+    {:data {:middleware [parameters/parameters-middleware
+                         middleware/wrap-tap-request-reponse
+                         middleware/wrap-hiccup->html]}
+     :conflicts (constantly nil)})))
 
 (defn start-server [dev-mode? server-opts]
   (jetty/run-jetty

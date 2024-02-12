@@ -1,19 +1,27 @@
 (ns dumrat.htmx-learn.middleware
-  (:require [ring.middleware.resource :refer [wrap-resource]]))
+  (:require [hiccup2.core :refer [html]]))
 
 ;; middleware and reitit wrappers
 
-(defn wrap-tap-request-response [handler]
+(defn- tap-request-response [handler]
   (fn [request]
     (tap> request)
     (let [response (handler request)]
       (tap> response)
+      #_(tap> (with-meta (:body response) {:portal.viewer/default :portal.viewer/hiccup}))
       response)))
 
-(def tap-request-response-reitit-middleware
+(def wrap-tap-request-reponse
   {:name ::tap-request-response
-   :wrap #'wrap-tap-request-response})
+   :wrap #'tap-request-response})
 
-(def resource-middleware
-  {:name ::resource-middleware
-   :wrap (fn [handler] (wrap-resource handler "public"))})
+(defn- hiccup->html [handler]
+  (fn [request]
+    (let [response (handler request)]
+      (if-not (= "hiccup" (get-in response [:headers "Content-Type"]))
+        response
+        (update response :body (comp str (fn [x] (html x))))))))
+
+(def wrap-hiccup->html
+  {:name ::tap-request-response
+   :wrap #'hiccup->html})

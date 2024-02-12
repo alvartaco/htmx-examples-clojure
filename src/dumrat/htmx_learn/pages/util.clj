@@ -1,6 +1,7 @@
 (ns dumrat.htmx-learn.pages.util
   (:require [hiccup2.core :refer [html]]
-            [reitit.core :refer [match-by-name match->path] :as r]))
+            [reitit.core :refer [match-by-name match->path] :as r]
+            [ring.util.response :as resp]))
 
 (defn header []
   [:head
@@ -23,3 +24,8 @@
   (-> router
       (match-by-name name)
       (match->path)))
+
+(defn hiccup-response [body]
+  (-> body
+      resp/response
+      (resp/header "Content-Type" "hiccup")))
