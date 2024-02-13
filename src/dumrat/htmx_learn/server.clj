@@ -5,12 +5,16 @@
             [reitit.ring.middleware.parameters :as parameters]
             [dumrat.htmx-learn.middleware :as middleware]
             ;;
-            [dumrat.htmx-learn.pages.example1 :as example1]))
+            [dumrat.htmx-learn.pages.main :as main]
+            [dumrat.htmx-learn.pages.example1 :as example1]
+            [dumrat.htmx-learn.pages.example2 :as example2]))
 
 (def ^:private routes
   [["/assets/*" (rr/create-resource-handler)]
    ["/htmx-examples"
-    example1/routes]])
+    main/routes
+    example1/routes
+    example2/routes]])
 
 (def handler
   (rr/ring-handler

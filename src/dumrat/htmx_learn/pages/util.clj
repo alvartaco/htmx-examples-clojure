@@ -15,10 +15,15 @@
 (defn hiccup->html [content]
   (str (html content)))
 
+;; TODO: 1. Remove hard-coded back-link by adding request to params.
+;; TODO: 2. Hide back-link on main page.
 (defn page [body]
   [:html
    (header)
-   [:body {:hx-boost true} body]])
+   [:body {:hx-boost true}
+    body
+    [:section {:style {:margin-top "10px"}}]
+    [:a {:href "/htmx-examples/index.html"} "Back to main page"]]])
 
 (defn name->path [{::r/keys [router]} name]
   (-> router

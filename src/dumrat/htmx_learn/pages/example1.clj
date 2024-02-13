@@ -12,10 +12,10 @@
    [:div [:label "Email"] (str " : " (::email @state))]
    [:button.btn.btn-primary {:hx-get (name->path request ::contact-edit-form)} "Click to Edit"]])
 
-(defn contact-view-page [request]
+(defn- contact-view-page [request]
   (hiccup-response (page (user-card request))))
 
-(defn contact-edit-form [request]
+(defn- contact-edit-form [request]
   (hiccup-response
    (page [:form {:hx-put "", :hx-target "this", :hx-swap "outerHTML"}
           [:div
@@ -33,7 +33,7 @@
 (def html-key->state-key
   {"firstName" ::first-name "lastName" ::last-name "email" ::email})
 
-(defn contact-put [request]
+(defn- contact-put [request]
   (let [params (:form-params request)]
     (if (every? some? params)
       (do (swap! state
@@ -44,8 +44,15 @@
            (name->path request ::contact-view-page)
            :see-other)))))
 
+(defn- contact-main [request]
+  (redirect
+    (name->path request ::contact-view-page)
+    :see-other))
+
 (def routes
   ["/example1"
+   ["" {:name ::main
+        :handler contact-main}]
    ["/contact/1"
     {:name ::contact-view-page
      :get {:handler contact-view-page}
