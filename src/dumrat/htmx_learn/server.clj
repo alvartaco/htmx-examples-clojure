@@ -20,8 +20,9 @@
   (rr/ring-handler
    (rr/router
     routes
-    {:data {:middleware [parameters/parameters-middleware
-                         middleware/wrap-tap-request-reponse
+    {:data {:middleware [middleware/wrap-tap-request-response
+                         parameters/parameters-middleware
+                         middleware/wrap-session
                          middleware/wrap-hiccup->html]}
      :conflicts (constantly nil)})))
 

@@ -1,10 +1,10 @@
 (ns dumrat.htmx-learn.pages.main
-  (:require [dumrat.htmx-learn.pages.util :refer [name->path page hiccup-response]]))
+  (:require [dumrat.htmx-learn.pages.util :refer [name->path wrap-page hiccup-response]]))
 
 
 (defn- main-example-list-page [request]
   (hiccup-response
-   (page
+   (wrap-page request
     [:table
      [:thead
       [:tr

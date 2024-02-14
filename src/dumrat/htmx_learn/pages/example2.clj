@@ -1,10 +1,20 @@
 (ns dumrat.htmx-learn.pages.example2
-  (:require [dumrat.htmx-learn.pages.util :refer [page name->path hiccup-response]]))
+  (:require [dumrat.htmx-learn.pages.util :refer [wrap-page hiccup-response get-state-or-init name->path]]
+            [ring.util.response :as response]))
 
-(defn- example2 [request]
+(def get-state
+  (get-state-or-init
+   "example2"
+   [{:name "Joe Smith" :email "joe@smith.org" :active true}
+    {:name "Angie MacDowell"  :email "angie@macdowell.org" :active true}
+    {:name "Fuqua Tarkenton"  :email "fuqua@tarkenton.org" :active false}
+    {:name "Kim Yee"  :email "kim@yee.org" :active false}]))
+
+(defn- view [request]
   (hiccup-response
-   (page
-    [:form {:id "checked-contacts"}
+   (wrap-page
+    request
+    [:form {:id "checked-contacts" :hx-post "" :hx-target "this" :hx-swap "outerHTML"}
      [:table
       [:thead
        [:tr
@@ -12,15 +22,26 @@
         [:th "Email"]
         [:th "Active"]]]
       [:tbody {:id "tbody"}
-       [:tr
-        [:td "Joe Smith"]
-        [:td "joe@smith.org"]
-        [:td
-         [:input {:type "checkbox", :name "active:joe@smith.org"}]]]]]
-     [:input {:type "submit", :value "Bulk Update"}]
+       (for [{:keys [name email active]} (deref (get-state request))]
+         [:tr
+          [:td name]
+          [:td email]
+          [:td
+           [:input {:type "checkbox", :name (str "active:" email) :checked active}]]])]]
+     [:input.btn {:type "submit" :value "Bulk update"}]
      [:span {:id "toast"}]])))
+
+(defn- update [request]
+  (let [update-vals (:form-params request)
+        next-vals
+        (map (fn [{:keys [email] :as curr}]
+               (assoc curr :active (update-vals (str "active:" email))))
+             (deref (get-state request)))]
+    (reset! (get-state request) next-vals)
+    (response/redirect (name->path request ::main) :see-other)))
 
 (def routes
   ["/example2"
-   ["" {:get {:handler example2}
+   ["" {:get {:handler view}
+        :post {:handler update}
         :name ::main}]])

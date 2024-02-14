@@ -1,53 +1,63 @@
 (ns dumrat.htmx-learn.pages.example1
   (:require [ring.util.response :refer [redirect]]
-            [dumrat.htmx-learn.pages.util :refer [name->path hiccup-response page]]))
+            [dumrat.htmx-learn.pages.util :as util]))
 
-(defonce ^:private state
-  (atom {::first-name "Joe" ::last-name "Blow" ::email "joe@blow.com"}))
+(def get-state
+  (util/get-state-or-init
+    "example1"
+    {::first-name "Joe" ::last-name "Blow" ::email "joe@blow.com"}))
 
 (defn- user-card [request]
-  [:div {:hx-target "this" :hx-swap "outerHTML"}
-   [:div [:label "First Name"] (str " : " (::first-name @state))]
-   [:div [:label "Last Name"] (str " : " (::last-name @state))]
-   [:div [:label "Email"] (str " : " (::email @state))]
-   [:button.btn.btn-primary {:hx-get (name->path request ::contact-edit-form)} "Click to Edit"]])
+  (let [_ (tap> {:in `user-card :state (get-state request) :request request})
+        statev (deref (get-state request))]
+    [:div {:hx-target "this" :hx-swap "outerHTML"}
+     [:div [:label "First Name"] (str " : " (::first-name statev))]
+     [:div [:label "Last Name"] (str " : " (::last-name statev))]
+     [:div [:label "Email"] (str " : " (::email statev))]
+     [:button.btn.btn-primary {:hx-get (util/name->path request ::contact-edit-form)} "Click to Edit"]]))
 
 (defn- contact-view-page [request]
-  (hiccup-response (page (user-card request))))
+  (util/hiccup-response (util/wrap-page request (user-card request))))
 
 (defn- contact-edit-form [request]
-  (hiccup-response
-   (page [:form {:hx-put "", :hx-target "this", :hx-swap "outerHTML"}
-          [:div
-           [:label "First Name"]
-           [:input {:autofocus true :type "text", :name "firstName", :value (::first-name @state)}]]
-          [:div.form-group
-           [:label "Last Name"]
-           [:input {:type "text", :name "lastName", :value (::last-name @state)}]]
-          [:div {:class "form-group"}
-           [:label "Email Address"]
-           [:input {:type "email", :name "email", :value (::email @state)}]]
-          [:button.btn {:type "submit"} "Submit"]
-          [:button.btn {:hx-get (name->path request ::contact-view-page)} "Cancel"]])))
+  (let [statev (deref (get-state request))]
+    (util/hiccup-response
+     (util/wrap-page request
+                     [:form#contact-frm {:hx-put "", :hx-target "this", :hx-swap "outerHTML"}
+                      [:div
+                       [:label "First Name"]
+                       [:input {:autofocus true :type "text", :name "firstName", :value (::first-name statev)}]]
+                      [:div.form-group
+                       [:label "Last Name"]
+                       [:input {:type "text", :name "lastName", :value (::last-name statev)}]]
+                      [:div {:class "form-group"}
+                       [:label "Email Address"]
+                       [:input {:type "email", :name "email", :value (::email statev)}]]
+                      [:button.btn {:type "submit"} "Submit"]
+                      [:button.btn {:hx-get (util/name->path request ::contact-view-page)
+                                    :hx-swap "outerHTML"
+                                    :hx-target "#contact-frm"} "Cancel"]]))))
 
 (def html-key->state-key
   {"firstName" ::first-name "lastName" ::last-name "email" ::email})
 
+;;TODO : Handle the case where all form params aren't present.
 (defn- contact-put [request]
-  (let [params (:form-params request)]
+  (let [params (:form-params request)
+        state (get-state request)]
     (if (every? some? params)
       (do (swap! state
                  (fn [s]
                    (reduce (partial apply assoc) s
                            (update-keys params html-key->state-key))))
           (redirect
-           (name->path request ::contact-view-page)
+           (util/name->path request ::contact-view-page)
            :see-other)))))
 
 (defn- contact-main [request]
   (redirect
-    (name->path request ::contact-view-page)
-    :see-other))
+   (util/name->path request ::contact-view-page)
+   :see-other))
 
 (def routes
   ["/example1"

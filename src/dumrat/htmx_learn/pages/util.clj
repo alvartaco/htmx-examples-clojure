@@ -12,18 +12,19 @@
    [:link {:rel "stylesheet" :href "/assets/css/site.css"}]
    [:script {:src "https://unpkg.com/htmx.org@1.9.10"}]])
 
-(defn hiccup->html [content]
-  (str (html content)))
-
 ;; TODO: 1. Remove hard-coded back-link by adding request to params.
 ;; TODO: 2. Hide back-link on main page.
-(defn page [body]
-  [:html
-   (header)
-   [:body {:hx-boost true}
-    body
-    [:section {:style {:margin-top "10px"}}]
-    [:a {:href "/htmx-examples/index.html"} "Back to main page"]]])
+(defn wrap-page
+  "If request doesn't have htmx headers, wrap in page. Otherwise returns as-is"
+  [request body]
+  (if-not (get-in request [:headers "hx-request"])
+    [:html
+     (header)
+     [:body {:hx-boost true}
+      body
+      [:section {:style {:margin-top "10px"}}]
+      [:a {:href "/htmx-examples/index.html"} "Back to main page"]]]
+    body))
 
 (defn name->path [{::r/keys [router]} name]
   (-> router
@@ -34,3 +35,10 @@
   (-> body
       resp/response
       (resp/header "Content-Type" "hiccup")))
+
+(defn get-state-or-init [path init-val]
+  (fn [request]
+    (let [state (get request :session)]
+      (when-not (get @state path)
+        (swap! state assoc path (atom init-val)))
+      (get @state path))))

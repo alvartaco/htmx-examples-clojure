@@ -10,7 +10,6 @@
   (assoc (d/datafy ex) :runtime :clj))
 
 (defn submit [value]
-  (println "submitting value")
   (portal/submit
    (if-not (instance? Exception value)
      value
