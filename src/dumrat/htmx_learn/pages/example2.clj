@@ -10,7 +10,7 @@
     {:name "Fuqua Tarkenton"  :email "fuqua@tarkenton.org" :active false}
     {:name "Kim Yee"  :email "kim@yee.org" :active false}]))
 
-(defn- view [request]
+(defn- example2-view [request]
   (hiccup-response
    (wrap-page
     request
@@ -31,7 +31,7 @@
      [:input.btn {:type "submit" :value "Bulk update"}]
      [:span {:id "toast"}]])))
 
-(defn- update [request]
+(defn- example2-update [request]
   (let [update-vals (:form-params request)
         next-vals
         (map (fn [{:keys [email] :as curr}]
@@ -42,6 +42,6 @@
 
 (def routes
   ["/example2"
-   ["" {:get {:handler view}
-        :post {:handler update}
+   ["" {:get {:handler example2-view}
+        :post {:handler example2-update}
         :name ::main}]])

@@ -25,7 +25,7 @@
 
 ;; System start/stop
 ;;------------------------------------------;;
-(def ^:private system (atom nil))
+(defonce ^:private system (atom nil))
 
 (defn stop-system! []
   (when @system

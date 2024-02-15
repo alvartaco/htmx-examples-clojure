@@ -9,7 +9,6 @@
     (tap> request)
     (let [response (handler request)]
       (tap> response)
-      #_(tap> (with-meta (:body response) {:portal.viewer/default :portal.viewer/hiccup}))
       response)))
 
 (def wrap-tap-request-response
@@ -33,7 +32,7 @@
 
 (defn- session-middleware
   "Basic session middleware to give each client a unique session.
-   If session isn't set, creates new server side session and sets id as cookie in response
+   If session isn't present, creates new server side session and sets id as cookie in response
    Injects session into request."
   [handler]
   (fn [request]
@@ -41,7 +40,7 @@
           [_ request-session-id] (re-matches #"sessionId=(.*)" (or cookie ""))
           [session-id session] (session/get-or-create-session request-session-id)
           response (handler (assoc request :session session))]
-      (if (nil? request-session-id)
+      (if (not= session-id request-session-id)
         (assoc-in response [:headers "Set-Cookie"] (str "sessionId=" session-id ";path=/"))
         response))))
 
