@@ -30,7 +30,7 @@
      [:td {:colspan 3}
       [:center
        [:button {:class "btn"
-                 :hx-get (util/name->path request ::page ["page" (inc page)])
+                 :hx-get (util/name->path request ::page {:query-params {:page (inc page)}})
                  :hx-target "#replaceMe"
                  :hx-swap "outerHTML"}
         "Load More Agents..."
@@ -77,4 +77,9 @@
   (class (for [i (range 3)] i))
 
   (let [s (lazy-seq (take 10 (range)))]
-    (lazy-cat s [99])))
+    (lazy-cat s [99]))
+
+  (util/name->path {:reitit.core/router (reitit.ring/router routes)}
+                   ::page {:query-params {"page" 2}})
+
+  #_f)

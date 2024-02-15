@@ -15,7 +15,8 @@
             [dumrat.htmx-learn.pages.main :as main]
             [dumrat.htmx-learn.pages.example1 :as example1]
             [dumrat.htmx-learn.pages.example2 :as example2]
-            [dumrat.htmx-learn.pages.example3 :as example3]))
+            [dumrat.htmx-learn.pages.example3 :as example3]
+            [dumrat.htmx-learn.pages.example4 :as example4]))
 
 (def ^:private routes
   [["/assets/*" (rr/create-resource-handler)]
@@ -23,7 +24,8 @@
     main/routes
     example1/routes
     example2/routes
-    example3/routes]])
+    example3/routes
+    example4/routes]])
 
 ;;TODO: Compile coercers before prod
 (def handler

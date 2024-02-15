@@ -21,14 +21,15 @@
     [:html
      (header)
      [:body {:hx-boost true}
-      body
-      [:section {:style {:margin-top "10px"}}]
-      [:a {:href "/htmx-examples/index.html"} "Back to main page"]]]
+      [:center [:a {:href "/htmx-examples/index.html"} "\u2190 Back to main page"]]
+      [:div {:class "c content"}
+       body
+       [:section {:style {:margin-top "40px"}}]]]]
     body))
 
-(defn name->path [{::r/keys [router]} name & query-params]
+(defn name->path [{::r/keys [router]} name & {:keys [path-params query-params]}]
   (-> router
-      (match-by-name name)
+      (match-by-name name path-params)
       (match->path query-params)))
 
 (defn hiccup-response [body]
@@ -42,7 +43,3 @@
       (when-not (get @state path)
         (swap! state assoc path (atom init-val)))
       (get @state path))))
-
-(defn parse-int [number-string]
-  (try (Integer/parseInt number-string)
-    (catch Exception e nil)))
