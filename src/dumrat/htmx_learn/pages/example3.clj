@@ -52,17 +52,18 @@
 (defn- page [request]
   #_(tap> {:in `page :request request})
   (Thread/sleep 2000) ;; Emulate data load delay
-  (let [requested-page (get-in request [:params "page"])]
+  (let [requested-page (get-in request [:parameters :query :page])]
     (if-not requested-page
       (response/bad-request "Required parameter page not specified")
       (util/hiccup-response
-       (get-page request (util/parse-int requested-page))))))
+       (get-page request requested-page)))))
 
 (def routes
   ["/example3"
    ["" {:get {:handler example3-view}
         :name ::main}]
-   ["/page" {:get {:handler page}
+   ["/page" {:get {:handler page
+                   :parameters {:query {:page int?}}}
              :name ::page}]])
 
 (comment

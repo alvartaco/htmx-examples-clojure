@@ -28,11 +28,13 @@
           [:td email]
           [:td
            [:input {:type "checkbox", :name (str "active:" email) :checked active}]]])]]
-     [:input.btn {:type "submit" :value "Bulk update"}]
+     [:center
+      [:input {:class "btn" :type "submit" :value "Bulk update"}]]
      [:span {:id "toast"}]])))
 
 (defn- example2-update [request]
-  (let [update-vals (:form-params request)
+  (let [update-vals (:params request)
+        ;;_ (tap> {:in `example2-update :update-vals update-vals :request request})
         next-vals
         (map (fn [{:keys [email] :as curr}]
                (assoc curr :active (update-vals (str "active:" email))))

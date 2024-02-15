@@ -3,8 +3,15 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [reitit.ring.middleware.parameters :as parameters]
-            [dumrat.htmx-learn.middleware :as middleware]
+            [reitit.coercion.malli :as malli]
+            [reitit.ring.coercion :as rrc]
+            [reitit.coercion :as coercion]
+            [muuntaja.core :as m]
+            [reitit.ring.middleware.muuntaja :as muuntaja]
+            [reitit.ring.middleware.exception :as exception]
+            [reitit.dev.pretty :as pretty]
             ;;
+            [dumrat.htmx-learn.middleware :as middleware]
             [dumrat.htmx-learn.pages.main :as main]
             [dumrat.htmx-learn.pages.example1 :as example1]
             [dumrat.htmx-learn.pages.example2 :as example2]
@@ -18,14 +25,34 @@
     example2/routes
     example3/routes]])
 
+;;TODO: Compile coercers before prod
 (def handler
   (rr/ring-handler
    (rr/router
     routes
-    {:data {:middleware [middleware/wrap-tap-request-response
+    {:data {:exception pretty/exception
+            :middleware [middleware/tap-response-middleware
                          parameters/parameters-middleware
-                         middleware/wrap-session
-                         middleware/wrap-hiccup->html]}
+                         muuntaja/format-negotiate-middleware
+                         muuntaja/format-response-middleware
+                         exception/exception-middleware
+                         muuntaja/format-request-middleware
+                         rrc/coerce-exceptions-middleware
+                         middleware/session-middleware
+                         middleware/hiccup->html-middlware
+                         rrc/coerce-request-middleware
+                         rrc/coerce-response-middleware
+                         middleware/tap-request-middleware]
+            :coercion (reitit.coercion.malli/create
+                       {;; set of keys to include in error messages
+                        :error-keys #{#_:type :coercion :in :schema :value :errors :humanized #_:transformed}
+                           ;; strip-extra-keys (affects only predefined transformers)
+                        :strip-extra-keys true
+                           ;; add/set default values
+                        :default-values true
+                           ;; malli options
+                        :options nil})
+            :muuntaja m/instance}
      :conflicts (constantly nil)})))
 
 (defn start-server [dev-mode? server-opts]
@@ -48,6 +75,4 @@
             :uri "/css/site.css"})
 
   (let [router (rr/router example1/routes)]
-    (reitit.core/match-by-name router ::example1/contact-view-page))
-
-  ,,)
+    (reitit.core/match-by-name router ::example1/contact-view-page)))

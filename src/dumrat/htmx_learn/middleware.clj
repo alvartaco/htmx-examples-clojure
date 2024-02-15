@@ -3,17 +3,24 @@
             [dumrat.htmx-learn.session :as session]))
 
 ;; middleware and reitit wrappers
-
-(defn- tap-request-response [handler]
+(defn- tap-request [handler]
   (fn [request]
-    (tap> request)
+    (tap> {:request request})
+    (handler request)))
+
+(def tap-request-middleware
+  {:name ::tap-request
+   :wrap #'tap-request})
+
+(defn- tap-response [handler]
+  (fn [request]
     (let [response (handler request)]
-      (tap> response)
+      (tap> {:response response})
       response)))
 
-(def wrap-tap-request-response
-  {:name ::tap-request-response
-   :wrap #'tap-request-response})
+(def tap-response-middleware
+  {:name ::tap-response
+   :wrap #'tap-response})
 
 (defn- hiccup->html
   "If content-Type is hiccup, convert body to html string"
@@ -26,11 +33,11 @@
             (update :body (comp str (fn [x] (html x))))
             (assoc-in [:headers "Content-Type"] "text/html"))))))
 
-(def wrap-hiccup->html
-  {:name ::tap-request-response
+(def hiccup->html-middlware
+  {:name ::hiccup->html-middleware
    :wrap #'hiccup->html})
 
-(defn- session-middleware
+(defn- add-session
   "Basic session middleware to give each client a unique session.
    If session isn't present, creates new server side session and sets id as cookie in response
    Injects session into request."
@@ -44,9 +51,9 @@
         (assoc-in response [:headers "Set-Cookie"] (str "sessionId=" session-id ";path=/"))
         response))))
 
-(def wrap-session
-  {:name ::session
-   :wrap #'session-middleware})
+(def session-middleware
+  {:name ::session-middleware
+   :wrap #'add-session})
 
 (comment
 

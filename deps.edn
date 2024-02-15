@@ -3,5 +3,6 @@
         ring/ring-devel {:mvn/version "1.11.0"}
         ring/ring-jetty-adapter {:mvn/version "1.11.0"}
         metosin/reitit {:mvn/version "0.7.0-alpha7"}
+        metosin/muuntaja {:mvn/version "0.6.8"}
         hiccup/hiccup {:mvn/version "2.0.0-RC2"}}
  :paths ["src" "resources"]}
