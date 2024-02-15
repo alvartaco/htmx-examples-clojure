@@ -4,7 +4,7 @@
 
 (def get-state
   (get-state-or-init
-   "example2"
+    ::example2
    [{:name "Joe Smith" :email "joe@smith.org" :active true}
     {:name "Angie MacDowell"  :email "angie@macdowell.org" :active true}
     {:name "Fuqua Tarkenton"  :email "fuqua@tarkenton.org" :active false}

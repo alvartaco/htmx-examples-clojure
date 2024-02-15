@@ -21,10 +21,10 @@
 
 (comment
 
-  @sessions
-  (str (random-uuid))
 
   @sessions
+
+  (reset! sessions {})
 
   (get-or-create-session nil)
   (get-or-create-session (str (random-uuid)))

@@ -4,7 +4,7 @@
 
 (def get-state
   (util/get-state-or-init
-    "example1"
+    ::example1
     {::first-name "Joe" ::last-name "Blow" ::email "joe@blow.com"}))
 
 (defn- user-card [request]

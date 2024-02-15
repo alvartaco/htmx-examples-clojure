@@ -1,10 +1,10 @@
 (ns dumrat.htmx-learn.pages.main
   (:require [dumrat.htmx-learn.pages.util :refer [name->path wrap-page hiccup-response]]))
 
-
 (defn- main-example-list-page [request]
   (hiccup-response
-   (wrap-page request
+   (wrap-page
+    request
     [:table
      [:thead
       [:tr
@@ -15,7 +15,13 @@
        [:td [:span "Demonstrates inline editing of a data object"]]]
       [:tr
        [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example2/main)} "Bulk Update"]]
-       [:td [:span "Demonstrates bulk updating of multiple rows of data"]]]]])))
+       [:td [:span "Demonstrates bulk updating of multiple rows of data"]]]
+      [:tr
+       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example3/main)} "Click To Load"]]
+       [:td [:span "Demonstrates clicking to load more rows in a table"]]]
+      [:tr
+       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example4/main)} "Delete Row"]]
+       [:td [:span "Demonstrates row deletion in a table"]]]]])))
 
 (def routes
   [["/index.html"

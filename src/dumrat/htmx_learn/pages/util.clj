@@ -26,10 +26,10 @@
       [:a {:href "/htmx-examples/index.html"} "Back to main page"]]]
     body))
 
-(defn name->path [{::r/keys [router]} name]
+(defn name->path [{::r/keys [router]} name & query-params]
   (-> router
       (match-by-name name)
-      (match->path)))
+      (match->path query-params)))
 
 (defn hiccup-response [body]
   (-> body
@@ -42,3 +42,7 @@
       (when-not (get @state path)
         (swap! state assoc path (atom init-val)))
       (get @state path))))
+
+(defn parse-int [number-string]
+  (try (Integer/parseInt number-string)
+    (catch Exception e nil)))
