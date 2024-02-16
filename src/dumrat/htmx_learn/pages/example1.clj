@@ -2,7 +2,7 @@
   (:require [ring.util.response :refer [redirect]]
             [dumrat.htmx-learn.pages.util :as util]))
 
-(def get-state
+(def ^:private get-state
   (util/get-state-or-init
    ::example1
    {:firstName "Joe" :lastName "Blow" :email "joe@blow.com"}))
@@ -18,34 +18,34 @@
                :hx-get (util/name->path request ::contact-edit-form)} "Click to Edit"]]))
 
 (defn- contact-view-page [request]
-  (util/hiccup-response (util/wrap-page request (user-card request))))
+  (util/wrap-page-hiccup request (user-card request)))
 
 (defn- contact-edit-form [request]
   (let [statev (deref (get-state request))]
-    (util/hiccup-response
-     (util/wrap-page request
-                     [:form {:id "contact-frm" :hx-put "", :hx-target "this", :hx-swap "outerHTML"}
-                      [:div {:class "form-group"}
-                       [:label "First Name"]
-                       [:input {:autofocus true :type "text", :name :firstName, :value (:firstName statev)}]]
-                      [:div {:class "form-group"}
-                       [:label "Last Name"]
-                       [:input {:type "text", :name :lastName, :value (:lastName statev)}]]
-                      [:div {:class "form-group"}
-                       [:label "Email Address"]
-                       [:input {:type "email", :name :email, :value (:email statev)}]]
-                      [:button {:class "btn"
-                                :type "submit"} "Submit"]
-                      [:button {:class "btn"
-                                :hx-get (util/name->path request ::contact-view-page)
-                                :hx-swap "outerHTML"
-                                :hx-target "#contact-frm"} "Cancel"]]))))
+    (util/wrap-page-hiccup
+     request
+     [:form {:id "contact-frm" :hx-put "", :hx-target "this", :hx-swap "outerHTML"}
+      [:div {:class "form-group"}
+       [:label "First Name"]
+       [:input {:autofocus true :type "text", :name :firstName, :value (:firstName statev)}]]
+      [:div {:class "form-group"}
+       [:label "Last Name"]
+       [:input {:type "text", :name :lastName, :value (:lastName statev)}]]
+      [:div {:class "form-group"}
+       [:label "Email Address"]
+       [:input {:type "email", :name :email, :value (:email statev)}]]
+      [:button {:class "btn"
+                :type "submit"} "Submit"]
+      [:button {:class "btn"
+                :hx-get (util/name->path request ::contact-view-page)
+                :hx-swap "outerHTML"
+                :hx-target "#contact-frm"} "Cancel"]])))
 
 ;;TODO : Handle the case where all form params aren't present.
 (defn- contact-put [request]
   (let [params (get-in request [:parameters :form])
         state (get-state request)]
-     #_(tap> {:in `contact-put :params params})
+    #_(tap> {:in `contact-put :params params})
     (if params
       (do (reset! state (reduce (partial apply assoc) @state params))
           (redirect
@@ -72,7 +72,6 @@
    ["/contact/1/edit-form"
     {:name ::contact-edit-form
      :get {:handler contact-edit-form}}]])
-
 
 (comment
 

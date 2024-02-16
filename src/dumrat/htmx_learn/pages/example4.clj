@@ -3,7 +3,7 @@
             [ring.util.response :as response]
             [reitit.core :as r]))
 
-(def get-state
+(def ^:private get-state
   (util/get-state-or-init
    ::example4
    {0 {:name "Joe Smith" :email "joe@smith.org" :status true}

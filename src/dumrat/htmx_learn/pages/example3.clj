@@ -37,17 +37,16 @@
         [:img {:class "htmx-indicator" :src "/assets/img/bars.svg"}]]]]]]))
 
 (defn- example3-view [request]
-  (util/hiccup-response
-   (util/wrap-page
-    request
-    [:table
-     [:thead
-      [:tr
-       [:th "Name"]
-       [:th "Email"]
-       [:th "ID"]]]
-     (into [:tbody {:id "tbody"}]
-           (get-page request 0))])))
+  (util/wrap-page-hiccup
+   request
+   [:table
+    [:thead
+     [:tr
+      [:th "Name"]
+      [:th "Email"]
+      [:th "ID"]]]
+    (into [:tbody {:id "tbody"}]
+          (get-page request 0))]))
 
 (defn- page [request]
   #_(tap> {:in `page :request request})

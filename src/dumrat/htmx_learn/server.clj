@@ -8,7 +8,6 @@
             [reitit.coercion :as coercion]
             [muuntaja.core :as m]
             [reitit.ring.middleware.muuntaja :as muuntaja]
-            [reitit.ring.middleware.exception :as exception]
             [reitit.dev.pretty :as pretty]
             ;;
             [dumrat.htmx-learn.middleware :as middleware]
@@ -16,7 +15,10 @@
             [dumrat.htmx-learn.pages.example1 :as example1]
             [dumrat.htmx-learn.pages.example2 :as example2]
             [dumrat.htmx-learn.pages.example3 :as example3]
-            [dumrat.htmx-learn.pages.example4 :as example4]))
+            [dumrat.htmx-learn.pages.example4 :as example4]
+            [dumrat.htmx-learn.pages.example5 :as example5]
+            [dumrat.htmx-learn.pages.example6 :as example6]
+            [dumrat.htmx-learn.pages.example7 :as example7]))
 
 (def ^:private routes
   [["/assets/*" (rr/create-resource-handler)]
@@ -25,26 +27,29 @@
     example1/routes
     example2/routes
     example3/routes
-    example4/routes]])
+    example4/routes
+    example5/routes
+    example6/routes
+    example7/routes]])
 
 ;;TODO: Compile coercers before prod
 (def handler
   (rr/ring-handler
    (rr/router
     routes
-    {:data {:exception pretty/exception
+    {:data {;;:exception pretty/exception
             :middleware [middleware/tap-response-middleware
                          parameters/parameters-middleware
                          muuntaja/format-negotiate-middleware
                          muuntaja/format-response-middleware
-                         exception/exception-middleware
                          muuntaja/format-request-middleware
                          rrc/coerce-exceptions-middleware
                          middleware/session-middleware
                          middleware/hiccup->html-middlware
                          rrc/coerce-request-middleware
                          rrc/coerce-response-middleware
-                         middleware/tap-request-middleware]
+                         middleware/tap-request-middleware
+                         middleware/exception-middleware]
             :coercion (reitit.coercion.malli/create
                        {;; set of keys to include in error messages
                         :error-keys #{#_:type :coercion :in :schema :value :errors :humanized #_:transformed}
