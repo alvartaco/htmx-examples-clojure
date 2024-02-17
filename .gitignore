@@ -20,3 +20,4 @@ pom.xml.asc
 .lsp/
 *.temp
 # End of https://www.toptal.com/developers/gitignore/api/clojure
+/resources/public/dynamic/

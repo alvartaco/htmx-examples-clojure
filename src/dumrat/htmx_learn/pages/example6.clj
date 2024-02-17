@@ -11,7 +11,7 @@
    {:time-to-cache 60 ;;minutes
     :url "https://api.star-history.com/svg?repos=bigskysoftware/htmx&type=Date"
     :expire-at (java.time.LocalDateTime/now)
-    :local-path "/img/htmx_stars.svg"}))
+    :local-path "dynamic/img/htmx_stars.svg"}))
 
 (defn- main [request]
   (util/wrap-page-hiccup
@@ -33,9 +33,11 @@
         {:keys [time-to-cache expire-at local-path url]} @state]
     (when (.isBefore expire-at (java.time.LocalDateTime/now))
       (let [response @(hk-client/get url)
-            content (:body response)]
+            content (:body response)
+            target-filename (str (fs/path (fs/cwd) "resources/public" local-path))]
         #_(tap> {:in `stars :response response :content content :cwd (fs/cwd)})
-        (spit (str "resources/public" local-path) content)
+        (fs/create-dirs (fs/parent target-filename))
+        (spit target-filename content)
         (swap! state assoc :expire-at (.plusMinutes (java.time.LocalDateTime/now) time-to-cache))))
     (Thread/sleep 2000)
     (response/resource-response local-path {:root "/public"})))

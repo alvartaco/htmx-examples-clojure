@@ -29,7 +29,10 @@
       [:td [:span "Demonstrates how to lazy load content"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example7/main)} "Inline Validation"]]
-      [:td [:span "Demonstrates how to do inline field validation"]]]]]))
+      [:td [:span "Demonstrates how to do inline field validation"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example8/main)} "Infinite Scroll"]]
+      [:td [:span "Demonstrates infinite scrolling of a page"]]]]]))
 
 (def routes
   [["/index.html"
