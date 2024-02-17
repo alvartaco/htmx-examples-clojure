@@ -32,7 +32,10 @@
       [:td [:span "Demonstrates how to do inline field validation"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example8/main)} "Infinite Scroll"]]
-      [:td [:span "Demonstrates infinite scrolling of a page"]]]]]))
+      [:td [:span "Demonstrates infinite scrolling of a page"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example9/main)} "Active Search"]]
+      [:td [:span "Demonstrates the active search box pattern"]]]]]))
 
 (def routes
   [["/index.html"

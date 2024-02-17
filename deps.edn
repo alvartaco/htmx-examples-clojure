@@ -8,5 +8,6 @@
         http-kit/http-kit {:mvn/version "2.7.0"}
         babashka/fs {:mvn/version "0.5.20"}
         garden/garden {:mvn/version "1.3.10"}
-        worldsingles/ws-commons {:mvn/version "0.1.3"}}
+        worldsingles/ws-commons {:mvn/version "0.1.3"}
+        talltale/talltale {:mvn/version "0.5.14"}}
  :paths ["src" "resources"]}

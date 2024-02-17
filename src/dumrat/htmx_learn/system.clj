@@ -1,6 +1,7 @@
 (ns dumrat.htmx-learn.system
   (:require [integrant.core :as ig]
-            [dumrat.htmx-learn.server :as server]))
+            [dumrat.htmx-learn.server :as server]
+            #_[dumrat.htmx-learn.pages.example9 :as example9]))
 
 ;; System config
 ;;------------------------------------------;;
@@ -9,7 +10,9 @@
    ::dev-mode? true
    :server/opts {:port 3000 :join? false}
    ::server {:server-opts (ig/ref :server/opts)
-             :dev-mode? (ig/ref ::dev-mode?)}})
+             :dev-mode? (ig/ref ::dev-mode?)}
+   ;;:example9/sample-data {:num-samples 1000}
+   })
 
 (defmethod ig/init-key ::start-time [_ _]
   (java.util.Date.))
@@ -19,6 +22,8 @@
 (defmethod ig/init-key :server/opts [_ v] v)
 (defmethod ig/init-key ::server [_ {:keys [server-opts dev-mode?]}]
   (server/start-server dev-mode? server-opts))
+;; (defmethod ig/init-key :example9/sample-data [_ {num-samples :num-samples}]
+;;   (example9/generate-sample-data num-samples))
 
 (defmethod ig/halt-key! ::server [_ server]
   (server/stop-server server))
