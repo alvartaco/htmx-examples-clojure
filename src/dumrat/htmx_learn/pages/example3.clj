@@ -8,33 +8,37 @@
 (def ^:private get-state
   (util/get-state-or-init
    ::example3
-   (map (fn [i]
-          {:name (format "Agent %03d" i)
-           :email (format "void%03d@null.org" i)
-           :id (get-random-str)})
-        (range 1000))))
-
-(defonce ^Integer ^:private page-size 10)
+   {:count 100
+    :page-size 10
+    :entries (map (fn [i]
+                    {:name (format "Agent %03d" i)
+                     :email (format "void%03d@null.org" i)
+                     :id (get-random-str)})
+                  (range 100))}))
 
 ;;TODO: Perhaps I shouldn't pass request into this fn.
 (defn- get-page [request ^Integer page]
   #_(tap> {:in `get-page :request request :page page})
-  (lazy-cat
-   (for [{:keys [name email id]}
-         (take page-size (drop (* page-size page) (deref (get-state request))))]
-     [:tr
-      [:td name]
-      [:td email]
-      [:td id]])
-   [[:tr {:id "replaceMe"}
-     [:td {:colspan 3}
-      [:center
-       [:button {:class "btn"
-                 :hx-get (util/name->path request ::page {:query-params {:page (inc page)}})
-                 :hx-target "#replaceMe"
-                 :hx-swap "outerHTML"}
-        "Load More Agents..."
-        [:img {:class "htmx-indicator" :src "/assets/img/bars.svg"}]]]]]]))
+  (let [{cnt :count page-size :page-size entries :entries} @(get-state request)
+        _ (tap> [cnt page-size])
+        has-more-to-load? (> cnt (* page-size (dec page)))
+        next-page (if has-more-to-load? (inc page) page)]
+    (lazy-cat
+     (when has-more-to-load?
+      (for [{:keys [name email id]} (take page-size (drop (* page-size page) entries))]
+        [:tr
+         [:td name]
+         [:td email]
+         [:td id]]))
+     [[:tr {:id "replaceMe"}
+       [:td {:colspan 3}
+        [:center
+         [:button {:class "btn"
+                   :hx-get (util/name->path request ::page {:query-params {:page next-page}})
+                   :hx-target "#replaceMe"
+                   :hx-swap "outerHTML"}
+          "Load More Agents..."
+          [:img {:class "htmx-indicator" :src "/assets/img/bars.svg"}]]]]]])))
 
 (defn- example3-view [request]
   (util/wrap-page-hiccup
@@ -50,7 +54,7 @@
 
 (defn- page [request]
   #_(tap> {:in `page :request request})
-  (Thread/sleep 2000) ;; Emulate data load delay
+  (Thread/sleep 300) ;; Emulate data load delay
   (let [requested-page (get-in request [:parameters :query :page])]
     (if-not requested-page
       (response/bad-request "Required parameter page not specified")
@@ -80,5 +84,9 @@
 
   (util/name->path {:reitit.core/router (reitit.ring/router routes)}
                    ::page {:query-params {"page" 2}})
+
+  (into list (for [i (range 10)] i))
+
+  (lazy-cat nil nil)
 
   #_f)
