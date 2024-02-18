@@ -35,7 +35,10 @@
       [:td [:span "Demonstrates infinite scrolling of a page"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example9/main)} "Active Search"]]
-      [:td [:span "Demonstrates the active search box pattern"]]]]]))
+      [:td [:span "Demonstrates the active search box pattern"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example10/main)} "Progress Bar"]]
+      [:td [:span "Demonstrates a job-runner like progress bar"]]]]]))
 
 (def routes
   [["/index.html"
