@@ -26,6 +26,7 @@
             [dumrat.htmx-learn.pages.example11 :as example11]
             [dumrat.htmx-learn.pages.example12 :as example12]
             [dumrat.htmx-learn.pages.example13 :as example13]
+            [dumrat.htmx-learn.pages.example15 :as example15]
             [dumrat.htmx-learn.pages.example14 :as example14]))
 
 (def ^:private routes
@@ -45,7 +46,8 @@
     example11/routes
     example12/routes
     example13/routes
-    example14/routes]])
+    example14/routes
+    example15/routes]])
 
 ;;TODO: Compile coercers before prod
 (def handler
