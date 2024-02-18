@@ -1,8 +1,10 @@
 (ns dumrat.htmx-learn.middleware
-  (:require [hiccup.page :as hp]
-            [hiccup2.core :as h]
-            [dumrat.htmx-learn.session :as session]
-            [reitit.ring.middleware.exception :as exception]))
+  (:require
+   [dumrat.htmx-learn.session :as session]
+   [hiccup.page :as hp]
+   [hiccup2.core :as h]
+   [reitit.ring.middleware.exception :as exception]
+   [ws.clojure.extensions :as ws]))
 
 ;; middleware and reitit wrappers
 (defn- tap-request [handler]
@@ -33,7 +35,7 @@
         response
         (-> response
             (update :body (comp str (fn [x]
-                                      (tap> (ws.clojure.extensions/local-map))
+                                      (tap> (ws/local-map))
                                       (if (get-in response [:headers :partial])
                                         (h/html x)
                                         (hp/html5 {:mode :html} x)))))

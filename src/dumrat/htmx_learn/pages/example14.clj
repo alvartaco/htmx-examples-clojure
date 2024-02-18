@@ -25,7 +25,7 @@
            (hs/class "content")
            (-> p
                :body
-               h/parse
+               hc/parse
                hc/as-hickory))
           first)))))
 
