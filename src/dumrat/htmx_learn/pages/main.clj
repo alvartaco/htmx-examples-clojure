@@ -53,7 +53,10 @@
       [:td [:span "Demonstrates how to preserve file inputs after form errors"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example15/main)} "Dialogs - Browser"]]
-      [:td [:span "Demonstrates the prompt and confirm dialogs"]]]]]))
+      [:td [:span "Demonstrates the prompt and confirm dialogs"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example16/main)} "Dialogs - UIKit"]]
+      [:td [:span "Demonstrates modal dialogs using UIKit"]]]]]))
 
 (def routes
   [["/index.html"
