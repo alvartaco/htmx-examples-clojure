@@ -41,7 +41,10 @@
       [:td [:span "Demonstrates a job-runner like progress bar"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example11/main)} "Value Select"]]
-      [:td [:span "Demonstrates making the values of a select dependent on another select"]]]]]))
+      [:td [:span "Demonstrates making the values of a select dependent on another select"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example12/main)} "Animations"]]
+      [:td [:span "Demonstrates various animation techniques"]]]]]))
 
 (def routes
   [["/index.html"
