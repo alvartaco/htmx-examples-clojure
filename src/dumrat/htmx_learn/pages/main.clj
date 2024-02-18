@@ -47,7 +47,10 @@
       [:td [:span "Demonstrates various animation techniques"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example13/main)} "File Upload"]]
-      [:td [:span "Demonstrates how to upload a file via ajax with a progress bar"]]]]]))
+      [:td [:span "Demonstrates how to upload a file via ajax with a progress bar"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example14/main)} "Preserving File Inputs after Form Errors"]]
+      [:td [:span "Demonstrates how to preserve file inputs after form errors"]]]]]))
 
 (def routes
   [["/index.html"
