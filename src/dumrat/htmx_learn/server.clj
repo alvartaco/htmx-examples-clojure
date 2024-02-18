@@ -8,6 +8,7 @@
             [reitit.coercion :as coercion]
             [muuntaja.core :as m]
             [reitit.ring.middleware.muuntaja :as muuntaja]
+            [reitit.ring.middleware.multipart :as multipart]
             [reitit.dev.pretty :as pretty]
             ;;
             [dumrat.htmx-learn.middleware :as middleware]
@@ -23,7 +24,8 @@
             [dumrat.htmx-learn.pages.example9 :as example9]
             [dumrat.htmx-learn.pages.example10 :as example10]
             [dumrat.htmx-learn.pages.example11 :as example11]
-            [dumrat.htmx-learn.pages.example12 :as example12]))
+            [dumrat.htmx-learn.pages.example12 :as example12]
+            [dumrat.htmx-learn.pages.example13 :as example13]))
 
 (def ^:private routes
   [["/assets/*" (rr/create-resource-handler)]
@@ -40,7 +42,8 @@
     example9/routes
     example10/routes
     example11/routes
-    example12/routes]])
+    example12/routes
+    example13/routes]])
 
 ;;TODO: Compile coercers before prod
 (def handler
@@ -50,6 +53,7 @@
     {:data {;;:exception pretty/exception
             :middleware [middleware/tap-response-middleware
                          parameters/parameters-middleware
+                         multipart/multipart-middleware
                          muuntaja/format-negotiate-middleware
                          muuntaja/format-response-middleware
                          muuntaja/format-request-middleware

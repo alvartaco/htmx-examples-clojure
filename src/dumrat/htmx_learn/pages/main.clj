@@ -44,7 +44,10 @@
       [:td [:span "Demonstrates making the values of a select dependent on another select"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example12/main)} "Animations"]]
-      [:td [:span "Demonstrates various animation techniques"]]]]]))
+      [:td [:span "Demonstrates various animation techniques"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example13/main)} "File Upload"]]
+      [:td [:span "Demonstrates how to upload a file via ajax with a progress bar"]]]]]))
 
 (def routes
   [["/index.html"

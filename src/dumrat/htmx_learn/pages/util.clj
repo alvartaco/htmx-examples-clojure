@@ -11,7 +11,8 @@
    [:title "HTMX Clojure ~ Examples"]
    [:link {:rel "stylesheet" :href "/assets/css/site.css"}]
    [:script {:src "https://unpkg.com/htmx.org@1.9.10"}]
-   [:script {:src "https://cdn.jsdelivr.net/npm/sweetalert2@11"}]])
+   [:script {:src "https://cdn.jsdelivr.net/npm/sweetalert2@11"}]
+   [:script {:src "https://unpkg.com/hyperscript.org@0.9.12"}]])
 
 (defn name->path [{::r/keys [router]} name & {:keys [path-params query-params]}]
   (-> router

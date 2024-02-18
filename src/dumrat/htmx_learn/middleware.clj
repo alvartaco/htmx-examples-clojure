@@ -1,5 +1,5 @@
 (ns dumrat.htmx-learn.middleware
-  (:require [hiccup2.core :refer [html]]
+  (:require [hiccup.page :as hp]
             [dumrat.htmx-learn.session :as session]
             [reitit.ring.middleware.exception :as exception]))
 
@@ -31,7 +31,7 @@
       (if-not (= "hiccup" (get-in response [:headers "Content-Type"]))
         response
         (-> response
-            (update :body (comp str (fn [x] (html x))))
+            (update :body (comp str (fn [x] (hp/html5 {:mode :html} x))))
             (assoc-in [:headers "Content-Type"] "text/html"))))))
 
 (def hiccup->html-middlware
@@ -95,5 +95,9 @@
 (comment
 
   (re-matches #"sessionId=(.*)" "sessionId=what")
+
+  (require '[hiccup.page :as page])
+
+  (page/html5 [:div])
 
   ,,)
