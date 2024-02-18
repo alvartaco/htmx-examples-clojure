@@ -38,9 +38,12 @@
       [:td [:span "Demonstrates the active search box pattern"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example10/main)} "Progress Bar"]]
-      [:td [:span "Demonstrates a job-runner like progress bar"]]]]]))
+      [:td [:span "Demonstrates a job-runner like progress bar"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example11/main)} "Value Select"]]
+      [:td [:span "Demonstrates making the values of a select dependent on another select"]]]]]))
 
 (def routes
   [["/index.html"
     {:get {:handler main-example-list-page}
-     :name ::root}]])
+     :name :root}]])

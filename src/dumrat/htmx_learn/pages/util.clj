@@ -1,16 +1,22 @@
 (ns dumrat.htmx-learn.pages.util
   (:require [reitit.core :refer [match-by-name match->path] :as r]
-            [ring.util.response :as resp]))
+            [ring.util.response :as resp]
+            [ws.clojure.extensions :as ws]))
 
 (defn header []
   [:head
    [:meta {:charset "utf-8"}]
    [:meta {:name "viewport" :content "width=device-width, initial-scale=1"}]
    [:meta {:name "description" :content "This is an implementation for htmx official example 1 - Click to Edit with a Clojure back-end."}]
-   [:title "</> htmx ~ Examples"]
+   [:title "HTMX Clojure ~ Examples"]
    [:link {:rel "stylesheet" :href "/assets/css/site.css"}]
    [:script {:src "https://unpkg.com/htmx.org@1.9.10"}]
    [:script {:src "https://cdn.jsdelivr.net/npm/sweetalert2@11"}]])
+
+(defn name->path [{::r/keys [router]} name & {:keys [path-params query-params]}]
+  (-> router
+      (match-by-name name path-params)
+      (match->path query-params)))
 
 ;; TODO: 1. Remove hard-coded back-link by adding request to params.
 ;; TODO: 2. Hide back-link on main page.
@@ -21,15 +27,14 @@
     [:html {:lang "en"}
      (header)
      [:body {:hx-boost true :hx-ext "class-tools, preload"}
-      [:center [:a {:href "/htmx-examples/index.html"} "\u2190 Back to main page"]]
+      (let [current-path (get-in request [::r/match :data :name])]
+        (tap> (ws/local-map))
+        (if (not= current-path :root)
+          [:center [:a {:href (name->path request :root)} "\u2190 Back to main page"]]
+          [:div {:hidden true}]))
       [:div {:class "c content"}
        body]]]
     body))
-
-(defn name->path [{::r/keys [router]} name & {:keys [path-params query-params]}]
-  (-> router
-      (match-by-name name path-params)
-      (match->path query-params)))
 
 (defn hiccup-response [body]
   (-> body
