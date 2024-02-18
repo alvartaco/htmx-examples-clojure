@@ -56,7 +56,10 @@
       [:td [:span "Demonstrates the prompt and confirm dialogs"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example16/main)} "Dialogs - UIKit"]]
-      [:td [:span "Demonstrates modal dialogs using UIKit"]]]]]))
+      [:td [:span "Demonstrates modal dialogs using UIKit"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example17/main)} "Dialogs - Bootstrap"]]
+      [:td [:span "Demonstrates modal dialogs using Bootstrap"]]]]]))
 
 (def routes
   [["/index.html"

@@ -1,5 +1,6 @@
 (ns dumrat.htmx-learn.pages.example15
-  (:require [dumrat.htmx-learn.pages.util :as util]))
+  (:require [dumrat.htmx-learn.pages.util :as util]
+            [hiccup2.core :as h]))
 
 (defn- main [request]
   (util/wrap-page-hiccup
@@ -16,7 +17,7 @@
 (defn- submit [request]
   (let [prompt (get-in request [:headers "hx-prompt"])]
     (util/hiccup-response
-     (str "User entered : <i>" prompt "</i>"))))
+     (h/raw (str "User entered : <i>" prompt "</i>")))))
 
 (def routes
   ["/example15"

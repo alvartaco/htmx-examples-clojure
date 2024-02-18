@@ -29,7 +29,7 @@
      (header)
      [:body {:hx-boost true :hx-ext "class-tools, preload"}
       (let [current-path (get-in request [::r/match :data :name])]
-        (tap> (ws/local-map))
+        ;(tap> (ws/local-map))
         (if (not= current-path :root)
           [:center [:a {:href (name->path request :root)} "\u2190 Back to main page"]]
           [:div {:hidden true}]))
@@ -40,10 +40,14 @@
 (defn hiccup-response [body]
   (-> body
       resp/response
-      (resp/header "Content-Type" "hiccup")))
+      (resp/header "Content-Type" "hiccup")
+      (assoc-in [:headers :partial] true)))
 
 (defn wrap-page-hiccup [request body]
-  (hiccup-response (wrap-page request body)))
+  (assoc-in
+   (hiccup-response
+    (wrap-page request body))
+   [:headers :partial] false))
 
 (defn get-state-or-init [path init-val]
   (fn [request]

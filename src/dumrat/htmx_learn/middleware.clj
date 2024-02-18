@@ -1,5 +1,6 @@
 (ns dumrat.htmx-learn.middleware
   (:require [hiccup.page :as hp]
+            [hiccup2.core :as h]
             [dumrat.htmx-learn.session :as session]
             [reitit.ring.middleware.exception :as exception]))
 
@@ -31,8 +32,13 @@
       (if-not (= "hiccup" (get-in response [:headers "Content-Type"]))
         response
         (-> response
-            (update :body (comp str (fn [x] (hp/html5 {:mode :html} x))))
-            (assoc-in [:headers "Content-Type"] "text/html"))))))
+            (update :body (comp str (fn [x]
+                                      (tap> (ws.clojure.extensions/local-map))
+                                      (if (get-in response [:headers :partial])
+                                        (h/html x)
+                                        (hp/html5 {:mode :html} x)))))
+            (assoc-in [:headers "Content-Type"] "text/html")
+            (update :headers dissoc :partial))))))
 
 (def hiccup->html-middlware
   {:name ::hiccup->html-middleware

@@ -77,9 +77,9 @@
   (let [id (get-in request [:parameters :path :id])
         state @(get-state request)
         {:keys [name email]} (get state id)]
-    (util/wrap-page-hiccup request
-                           (row-view-raw (util/name->path request ::row-edit {:path-params {:id id}})
-                                         name email))))
+    (util/hiccup-response
+     (row-view-raw (util/name->path request ::row-edit {:path-params {:id id}})
+                   name email))))
 
 (defn- row-update [request]
   (tap> {:in `row-update :request request})
@@ -89,8 +89,7 @@
     (swap! state update id (fn [s] (-> s
                                        (assoc :name name)
                                        (assoc :email email))))
-    (util/wrap-page-hiccup
-     request
+    (util/hiccup-response
      (row-view-raw (util/name->path request ::row-edit {:path-params {:id id}})
                    name email))))
 
