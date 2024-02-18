@@ -62,7 +62,10 @@
       [:td [:span "Demonstrates modal dialogs using Bootstrap"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example18/main)} "Dialogs - Custom"]]
-      [:td [:span "Demonstrates modal dialogs from scratch"]]]]]))
+      [:td [:span "Demonstrates modal dialogs from scratch"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example19/main)} "Tabs (Using HATEOAS)"]]
+      [:td [:span "Demonstrates how to display and select tabs using HATEOAS principles"]]]]]))
 
 (def routes
   [["/index.html"
