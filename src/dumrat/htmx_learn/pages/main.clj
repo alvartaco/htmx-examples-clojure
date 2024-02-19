@@ -68,7 +68,13 @@
       [:td [:span "Demonstrates how to display and select tabs using HATEOAS principles"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example20/main)} "Tabs (Using JavaScript)"]]
-      [:td [:span "Demonstrates how to display and select tabs using JavaScript"]]]]]))
+      [:td [:span "Demonstrates how to display and select tabs using JavaScript"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example21/main)} "Keyboard Shortcuts"]]
+      [:td [:span "Demonstrates how to create keyboard shortcuts for htmx enabled elements"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example22/main)} "Drag & Drop / Sortable"]]
+      [:td [:span "Demonstrates how to use htmx with the Sortable.js plugin to implement drag-and-drop reordering"]]]]]))
 
 (def routes
   [["/index.html"
