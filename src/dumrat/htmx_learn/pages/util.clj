@@ -25,16 +25,15 @@
   "If request doesn't have htmx headers, wrap in page. Otherwise returns as-is"
   [request body]
   (if-not (get-in request [:headers "hx-request"])
-    [:html {:lang "en"}
+    (list
      (header)
      [:body {:hx-boost true :hx-ext "class-tools, preload"}
       (let [current-path (get-in request [::r/match :data :name])]
-        ;(tap> (ws/local-map))
         (if (not= current-path :root)
           [:center [:a {:href (name->path request :root)} "\u2190 Back to main page"]]
           [:div {:hidden true}]))
       [:div {:class "c content"}
-       body]]]
+       body]])
     body))
 
 (defn hiccup-response [body]
