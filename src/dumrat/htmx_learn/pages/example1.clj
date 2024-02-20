@@ -1,6 +1,7 @@
 (ns dumrat.htmx-learn.pages.example1
   (:require [ring.util.response :refer [redirect]]
-            [dumrat.htmx-learn.pages.util :as util]))
+            [dumrat.htmx-learn.pages.util :as util]
+            [clojure.string :as str]))
 
 (def ^:private get-state
   (util/get-state-or-init
@@ -76,5 +77,4 @@
 (comment
 
   (str :firstName)
-
   #_f)

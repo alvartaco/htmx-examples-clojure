@@ -31,19 +31,23 @@
     [:script (slurp (clojure.java.io/resource "public/js/sortable_init.js"))]]))
 
 (defn- items [request]
-  (Thread/sleep 1000)
+  (Thread/sleep 100)
   (util/hiccup-response
-   (gen-draggable-items ["1" "2" "3" "4" "5" "6" "7"])))
+   (gen-draggable-items (get-in request [:parameters :form :item]))))
 
 (def routes
   ["/example22"
    ["" {:get {:handler main}
         :name ::main}]
-   ["/items" {:post {:handler items}
+   ["/items" {:post {:handler items
+                     :parameters {:form {:item [:cat [:* :string]]}}}
               :name ::items}]])
 
 (comment
 
-  (slurp (clojure.java.io/resource "public/js/sortable_init.js"))
+  (require '[malli.core :as m])
+  ;; Matches any amount of ints in a seq
+  (m/validate [:cat [:* :int]] [1 2 3])
+;; => false
 
   #_())
