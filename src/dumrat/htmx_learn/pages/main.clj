@@ -74,7 +74,10 @@
       [:td [:span "Demonstrates how to create keyboard shortcuts for htmx enabled elements"]]]
      [:tr
       [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example22/main)} "Drag & Drop / Sortable"]]
-      [:td [:span "Demonstrates how to use htmx with the Sortable.js plugin to implement drag-and-drop reordering"]]]]]))
+      [:td [:span "Demonstrates how to use htmx with the Sortable.js plugin to implement drag-and-drop reordering"]]]
+     [:tr
+      [:td [:a {:href (name->path request :dumrat.htmx-learn.pages.example23/main)} "Updating Other Content"]]
+      [:td [:span "Demonstrates how to update content beyond just the target elements"]]]]]))
 
 (def routes
   [["/index.html"
