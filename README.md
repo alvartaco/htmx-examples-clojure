@@ -6,7 +6,7 @@ htmx niceties for Clojure are present in [SimpleUI](https://github.com/whamtet/s
 
 ### How to use
 
-In action here : [TODO - add hosted link]
+[In action here](https://www.dumrat.com/htmx-examples/index.html)
 
 1. Try out at repl. Else, run `clj -M -m dumrat.htmx-learn.core` at root folder.
 2. Point the browser to [htmx-examples](http://localhost:3000/htmx-examples/index.html).
