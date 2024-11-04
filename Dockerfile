@@ -1,5 +1,7 @@
 # Base image that includes the Clojure CLI tools
-FROM clojure:openjdk-17-tools-deps-buster
+FROM clojure:openjdk-19-tools-deps-bullseye
+
+EXPOSE 3000
 
 RUN mkdir -p /app
 WORKDIR /app
