@@ -21,10 +21,11 @@ pom.xml.asc
 *.temp
 # End of https://www.toptal.com/developers/gitignore/api/clojure
 /resources/public/dynamic/
-/.idea/libraries/Deps__babashka_fs_0_5_20.xml
-/.idea/dbnavigator.xml
+/.idea/.gitignore
 /.idea/clojure-deps.xml
 /.idea/ClojureProjectResolveSettings.xml
+/.idea/dbnavigator.xml
+/.idea/libraries/Deps__babashka_fs_0_5_20.xml
 /.idea/libraries/Deps__borkdude_dynaload_0_3_5.xml
 /.idea/libraries/Deps__borkdude_edamame_1_3_23.xml
 /.idea/libraries/Deps__clj_stacktrace_0_2_8.xml
@@ -135,3 +136,4 @@ pom.xml.asc
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/vcs.xml
+/.idea/workspace.xml
